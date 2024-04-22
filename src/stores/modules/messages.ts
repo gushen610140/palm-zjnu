@@ -14,14 +14,14 @@ export const useMessageStore = defineStore(
     const clearMessage = () => {
       message.value = undefined
     }
-  }
 
-  return {
-    message,
-    setMessage,
-    clearMessage
-  },
-  {
-    persist: true
+    return {
+      message,
+      setMessage,
+      clearMessage
+    },
+    {
+      persist: true
+    }
   }
 )

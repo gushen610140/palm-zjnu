@@ -3,11 +3,28 @@
     <img src="@/static/logo.png" alt="logo" class="logo">
     <text class="title">{{ title }}</text>
   </view>
+  <button
+    open-type=""
+    hover-class="button-hover"
+    @click="getData"
+  >
+    111
+  </button>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-const title = ref('欢迎加入掌上浙师大')
+import { http } from '@/utils/http'
+const title = ref('欢迎来到掌上浙师大')
+
+const getData = async () => {
+  const res = await http({
+    url: '/projects',
+    method: 'GET'
+  })
+  console.log(res)
+}
+
 </script>
 
 <style>
@@ -19,7 +36,8 @@ const title = ref('欢迎加入掌上浙师大')
 }
 
 .logo {
-  width: 80%;
+  width: 200rpx;
+  height: 200rpx;
 }
 
 .title {

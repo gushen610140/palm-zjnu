@@ -1,8 +1,5 @@
-// src/utils/http.ts
-
 // 请求基地址
-// const baseURL = 'https://pcapi-xiaotuxian-front-devtest.itheima.net'
-const baseURL = 'http://sunway.icu'
+const baseURL = 'http://127.0.0.1:8080'
 
 // 拦截器配置
 const httpInterceptor = {

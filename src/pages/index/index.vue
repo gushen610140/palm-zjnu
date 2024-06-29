@@ -1,64 +1,66 @@
 <template>
-  <view class="search">
-    <img src="@/static/search_icon.png" alt="search" class="search-icon" />
+  <view class="topbar">
+    <input
+      v-model="searchContent"
+      placeholder="在这里搜索你想看的圈子"
+      class="search_input"
+    />
+    <image
+      src="@/static/publish.png"
+      mode="scaleToFill"
+      class="publish"
+      @click="onPublish"
+    />
   </view>
-  <view class="banner">
-    <view class="banner-img">
-
-    </view>
-    <view class="banner-title">
-      banner_title 大图标题
-    </view>
-  </view>
+  <swiper indicator-dots autoplay circular class="banner">
+    <swiper-item>
+      <image src="@/static/publish.png" mode="scaleToFill" />
+    </swiper-item>
+    <swiper-item>
+      <image src="@/static/search_icon.png" mode="scaleToFill" />
+    </swiper-item>
+  </swiper>
   <view class="discussion">
-    <DiscussionList/>
+    <DiscussionList />
   </view>
 </template>
 
 <script setup lang="ts">
-import DiscussionList from "@/components/DiscussionList.vue"
+import DiscussionList from "@/components/DiscussionList.vue";
+import { ref } from "vue";
 
+const searchContent = ref("");
+const onPublish = () => {
+  console.log("publish");
+};
 </script>
 
 <style scoped>
-.search {
-  height: 32px;
-  width: 328px;
-  border: 1px solid #707070;
-  border-radius: 16px;
-  margin: 0 auto;
-  margin-top: 16px;
+.topbar {
+  margin-top: 10px;
+  width: 100%;
   display: flex;
+  justify-content: center;
   align-items: center;
 }
-.search-icon {
-  height: 21px;
-  width: 21px;
+.search_input {
+  border: 1px solid #707070;
+  height: 32px;
+  width: 280px;
+  border-radius: 16px;
+  padding-left: 38px;
+  background-image: url("@/static/search_icon.png");
+  background-repeat: no-repeat;
+  background-position: 10px center;
+}
+.publish {
   margin-left: 10px;
+  width: 30px;
+  height: 30px;
 }
 .banner {
-  height: 216px;
-  width: 312px;
-  border: 1px solid #707070;
-  margin: 0 auto;
-  margin-top: 24px;
-}
-.banner-img {
-  margin: 0 auto;
-  margin-top: 24px;
-  height: 136px;
-  width: 280px;
-  border: 1px solid #707070;
-}
-.banner-title {
-  margin-top: 8px;
-  margin-left: 24px;
-  height: 32px;
-  width: 264px;
-  font-family: "HarmonyOS_Sans_SC_Black";
-  font-size: 24px;
-  font-weight: bold;
-  color: #707070;
+  margin-top: 32px;
+  height: 200px;
 }
 .discussion {
   margin: 0 auto;

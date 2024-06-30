@@ -13,21 +13,31 @@
     />
   </view>
   <swiper indicator-dots autoplay circular class="banner">
-    <swiper-item>
-      <image src="@/static/publish.png" mode="scaleToFill" />
-    </swiper-item>
-    <swiper-item>
-      <image src="@/static/search_icon.png" mode="scaleToFill" />
+    <swiper-item v-for="banner in bannerList">
+      <image
+        class="banner_img"
+        :src="`http://127.0.0.1:8080/api/images/banners/${banner.url}`"
+        mode="scaleToFill"
+      />
     </swiper-item>
   </swiper>
-  <view class="discussion">
-    <DiscussionList />
+  <view class="moments">
+    <MomentList />
   </view>
 </template>
 
 <script setup lang="ts">
-import DiscussionList from "@/components/DiscussionList.vue";
-import { ref } from "vue";
+import MomentList from "@/components/MomentList.vue";
+import { ref, onMounted } from "vue";
+import { getBannerListAPI } from "@/api/getBannerList";
+import { Banner } from "@/types/Banner";
+
+const bannerList = ref<Banner[]>();
+onMounted(() => {
+  getBannerListAPI().then((res) => {
+    bannerList.value = res;
+  });
+});
 
 const searchContent = ref("");
 const onPublish = () => {
@@ -59,10 +69,16 @@ const onPublish = () => {
   height: 30px;
 }
 .banner {
+  margin: 0 auto;
   margin-top: 32px;
   height: 200px;
+  width: 85%;
 }
-.discussion {
+.banner_img {
+  width: 100%;
+  height: 100%;
+}
+.moments {
   margin: 0 auto;
   margin-top: 32px;
   width: 312px;

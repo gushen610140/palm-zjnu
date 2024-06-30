@@ -4,6 +4,7 @@
     class="container"
     lower-threshold="10"
     @scrolltolower="onScrollToLower"
+    :scroll-top="pageProperty.scrolltop"
   >
     <view class="moment" v-for="moment in momentList">
       <view class="user_name">{{ moment.userName }}</view>
@@ -16,17 +17,20 @@
 import { ref, onMounted } from "vue";
 import { Moment } from "@/types/Moment.ts";
 import { getMomentListAPI } from "@/api/getMomentList";
+import { watch } from "vue";
 
 const momentList = ref<Moment[]>([]);
 
 type PageProperty = {
   current: number;
   size: number;
+  scrolltop: number;
 };
 
 const pageProperty = ref<PageProperty>({
   current: 1,
   size: 10,
+  scrolltop: 100,
 });
 
 const onScrollToLower = () => {
@@ -39,12 +43,25 @@ const onScrollToLower = () => {
 };
 
 onMounted(() => {
-  getMomentListAPI(pageProperty.value.current, pageProperty.value.size).then(
-    (res) => {
-      momentList.value = res;
-    }
-  );
+  getMomentListAPI(1, pageProperty.value.size).then((res) => {
+    momentList.value = res;
+  });
 });
+
+const props = defineProps<{
+  updateComponent: number;
+}>();
+console.log(props.updateComponent);
+
+watch(
+  () => props.updateComponent,
+  () => {
+    getMomentListAPI(1, pageProperty.value.size).then((res) => {
+      momentList.value = res;
+    });
+    pageProperty.value.scrolltop = 0;
+  }
+);
 </script>
 
 <style scoped>

@@ -22,18 +22,19 @@
     </swiper-item>
   </swiper>
   <view class="moments">
-    <MomentList />
+    <MomentList :updateComponent="updateComponent" />
   </view>
 </template>
 
 <script setup lang="ts">
 import MomentList from "@/components/MomentList.vue";
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 import { getBannerListAPI } from "@/api/getBannerList";
 import { Banner } from "@/types/Banner";
+import { onLoad, onShow } from "@dcloudio/uni-app";
 
 const bannerList = ref<Banner[]>();
-onMounted(() => {
+onLoad(() => {
   getBannerListAPI().then((res) => {
     bannerList.value = res;
   });
@@ -41,8 +42,15 @@ onMounted(() => {
 
 const searchContent = ref("");
 const onPublish = () => {
-  console.log("publish");
+  uni.navigateTo({
+    url: "/pages/publishMoment/index",
+  });
 };
+
+const updateComponent = ref<number>(0);
+onShow(() => {
+  updateComponent.value += 1;
+});
 </script>
 
 <style scoped>

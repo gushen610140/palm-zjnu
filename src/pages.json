@@ -36,6 +36,12 @@
 			"style": {
 				"navigationBarTitleText": "登录"
 			}
+		},
+		{
+			"path": "pages/publishMoment/index",
+			"style": {
+				"navigationBarTitleText": "发表圈子"
+			}
 		}
 	],
 	"globalStyle": {

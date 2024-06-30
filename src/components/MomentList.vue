@@ -1,42 +1,56 @@
 <template>
-  <view class="container">
+  <scroll-view
+    scroll-y="true"
+    class="container"
+    lower-threshold="10"
+    @scrolltolower="onScrollToLower"
+  >
     <view class="moment" v-for="moment in momentList">
       <view class="user_name">{{ moment.userName }}</view>
       <view class="content">{{ moment.content }}</view>
     </view>
-  </view>
+  </scroll-view>
 </template>
 
 <script setup lang="ts">
-import { http } from "@/utils/http";
 import { ref, onMounted } from "vue";
 import { Moment } from "@/types/Moment.ts";
+import { getMomentListAPI } from "@/api/getMomentList";
+
 const momentList = ref<Moment[]>([]);
 
-const getMomentList = () => {
-  http<Moment[]>({
-    url: "/api/moments",
-    method: "GET",
-    data: {
-      current: 1,
-      size: 10,
-    },
-  }).then((res) => {
-    momentList.value = res;
-  });
+type PageProperty = {
+  current: number;
+  size: number;
+};
+
+const pageProperty = ref<PageProperty>({
+  current: 1,
+  size: 10,
+});
+
+const onScrollToLower = () => {
+  pageProperty.value.current += 1;
+  getMomentListAPI(pageProperty.value.current, pageProperty.value.size).then(
+    (res) => {
+      momentList.value = momentList.value.concat(res);
+    }
+  );
 };
 
 onMounted(() => {
-  getMomentList();
+  getMomentListAPI(pageProperty.value.current, pageProperty.value.size).then(
+    (res) => {
+      momentList.value = res;
+    }
+  );
 });
 </script>
 
 <style scoped>
-.body {
+.container {
   width: 312px;
-  display: flex;
-  flex-direction: column;
-  border: 1px solid #707070;
+  height: 360px;
 }
 .moment {
   width: 312px;

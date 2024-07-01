@@ -26,13 +26,25 @@ const handlePublish = () => {
   addMomentAPI(
     generateUUID(),
     "gushen",
-    "http://lkfjdkfjsldf/sdfkjl.jpg",
+    "http://useravatar./url/avatar.jpg",
     new Date(),
     content.value
-  );
+  ).then(() => {
+    uni.navigateBack();
+  });
 };
 
-const handleAnonymousPublish = () => {};
+const handleAnonymousPublish = () => {
+  addMomentAPI(
+    generateUUID(),
+    "匿名用户",
+    "http:/useravatar/anonymous/url/avatar.jpg",
+    new Date(),
+    content.value
+  ).then(() => {
+    uni.navigateBack();
+  });
+};
 </script>
 
 <style scoped>

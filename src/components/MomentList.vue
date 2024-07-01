@@ -2,7 +2,7 @@
   <scroll-view
     scroll-y="true"
     class="container"
-    lower-threshold="10"
+    lower-threshold="50"
     @scrolltolower="onScrollToLower"
     :scroll-top="pageProperty.scrolltop"
   >

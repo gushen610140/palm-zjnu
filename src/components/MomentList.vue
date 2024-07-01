@@ -30,7 +30,7 @@ type PageProperty = {
 const pageProperty = ref<PageProperty>({
   current: 1,
   size: 10,
-  scrolltop: 100,
+  scrolltop: 0,
 });
 
 const onScrollToLower = () => {
@@ -51,7 +51,6 @@ onMounted(() => {
 const props = defineProps<{
   updateComponent: number;
 }>();
-console.log(props.updateComponent);
 
 watch(
   () => props.updateComponent,
@@ -59,7 +58,7 @@ watch(
     getMomentListAPI(1, pageProperty.value.size).then((res) => {
       momentList.value = res;
     });
-    pageProperty.value.scrolltop = 0;
+    pageProperty.value.scrolltop = Math.random();
   }
 );
 </script>

@@ -70,6 +70,6 @@ watch(
 }
 .moment {
   width: 312px;
-  border-bottom: 1px solid #707070;
+  border-bottom: 1px solid #70707080;
 }
 </style>

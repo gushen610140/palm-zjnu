@@ -1,33 +1,40 @@
 <template>
   <view class="myinfo">
     <view class="avatar">
-      <image class="avatar_img" :src="userInfo.avatarUrl" mode="scaleToFill" />
+      <image class="avatar_img" :src="userInfo.userAvatar" mode="scaleToFill" />
     </view>
     <view class="text">
-      <view class="name"> {{ userInfo.nickName }} </view>
-      <view class="code"> 学号 </view>
+      <view class="name"> {{ userInfo.userName }} </view>
+      <view class="code"> {{ userInfo.userId }} </view>
     </view>
+    <button
+      :disabled="false"
+      :loading="false"
+      hover-class="button-hover"
+      @click="login"
+    >
+      点击登录
+    </button>
   </view>
-  <button
-    :disabled="false"
-    :loading="false"
-    hover-class="button-hover"
-    @click="test"
-  >
-    click
-  </button>
+  <view class="functions">
+    <button class="edit">编辑个人资料</button>
+  </view>
 </template>
 
 <script lang="ts" setup>
 import { ref } from "vue";
 import { onLoad } from "@dcloudio/uni-app";
+import { userLogin } from "@/api/userLogin";
+import { Token } from "@/types/Token";
+import { User } from "@/types/User";
 
-const userInfo = ref({});
-const test = () => {
+const userInfo = ref<User>({});
+const login = () => {
   uni.login({
     provider: "weixin",
     onlyAuthorize: true, // 微信登录仅请求授权认证
     success: function (event) {
+      // 从微信官方服务器获取token
       uni.request({
         url: "https://api.weixin.qq.com/sns/jscode2session",
         method: "GET",
@@ -37,9 +44,15 @@ const test = () => {
           js_code: event.code,
           grant_type: "authorization_code",
         },
+        // 向服务器登录
         success: (res) => {
-          //获得token完成登录
-          console.log(res);
+          userLogin(res.data.openid, res.data.session_key).then((res) => {
+            console.log(res);
+            userInfo.value = res.data;
+          });
+        },
+        fail: (fail) => {
+          console.log(fail);
         },
       });
     },
@@ -55,7 +68,7 @@ onLoad(() => {
   uni.getUserInfo({
     provider: "weixin",
     success: (res) => {
-      userInfo.value = res.userInfo;
+      console.log(res);
     },
   });
 });
@@ -83,5 +96,17 @@ onLoad(() => {
 }
 .text {
   margin-left: 20px;
+}
+.name {
+  font-size: 20px;
+  font-weight: bold;
+}
+.code {
+  font-size: 14px;
+  font-weight: lighter;
+  margin-top: 5px;
+}
+.functions {
+  margin-top: 20px;
 }
 </style>

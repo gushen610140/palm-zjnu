@@ -6,7 +6,7 @@
     @scrolltolower="onScrollToLower"
     :scroll-top="pageProperty.scrolltop"
   >
-    <view class="moment" v-for="moment in momentList">
+    <view class="moment" v-for="moment in momentList" :key="moment.id">
       <view class="user_name">{{ moment.userName }}</view>
       <view class="content">{{ moment.content }}</view>
     </view>

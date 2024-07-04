@@ -13,7 +13,7 @@
     />
   </view>
   <swiper indicator-dots autoplay circular class="banner">
-    <swiper-item v-for="banner in bannerList">
+    <swiper-item v-for="banner in bannerList" :key="banner.url">
       <image
         class="banner_img"
         :src="`http://127.0.0.1:8080/api/images/banners/${banner.url}`"

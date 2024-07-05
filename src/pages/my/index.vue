@@ -23,11 +23,13 @@
 
 <script lang="ts" setup>
 import { ref } from "vue";
-import { onLoad, onReady } from "@dcloudio/uni-app";
-import { userLogin } from "@/api/userLogin";
+import { onReady } from "@dcloudio/uni-app";
+import { postUserLoginAPI } from "@/api/postUserLoginAPI";
 import { Token } from "@/types/Token";
 import { User } from "@/types/User";
 import { getUserInfoAPI } from "@/api/getUserInfoAPI";
+import { Result } from "@/types/Result";
+import { getTokenFromWechatAPI } from "@/api/getTokenFromWechatAPI";
 
 const userInfo = ref<User>({
   userId: "0000000",
@@ -37,62 +39,53 @@ const userInfo = ref<User>({
 const popup = ref();
 
 onReady(() => {
-  // 检查用户是否已经登录
   uni.getStorage({
     key: "token",
     // 用户已经登录
     success: (userTokenRes) => {
-      getUserInfoAPI(userTokenRes.data).then((userInfoRes) => {
+      getUserInfoAPI(userTokenRes.data).then((userInfoRes: Result<User>) => {
         userInfo.value = userInfoRes.data;
       });
     },
-    // 用户登录无效
-    fail: (res) => {
-      // 尝试利用微信授权用户登录
+    // 用户没有登录
+    fail: () => {
       uni.login({
         provider: "weixin",
         onlyAuthorize: true,
-        success: function (event) {
-          // 从微信官方服务器获取token
-          uni.request({
-            url: "https://api.weixin.qq.com/sns/jscode2session",
-            method: "GET",
-            data: {
-              appid: "wx622113ff58e2b46b",
-              secret: "360464608fc569e5867a35e4cf5bb309",
-              js_code: event.code,
-              grant_type: "authorization_code",
-            },
-            // 向开发者服务器登录
-            success: (wxToken) => {
-              userLogin(wxToken.data.openid, wxToken.data.session_key).then(
-                (res) => {
-                  if (res.code == 201) {
-                    // 新注册的用户，弹窗尝试获取用户信息
-                    popup.value.open();
-                  }
-                  userInfo.value = res.data;
-                  uni.setStorage({
-                    key: "token",
-                    data: wxToken.data,
-                  });
+        // 微信授权登录成功
+        success: (wechatLoginCodeRes) => {
+          getTokenFromWechatAPI(wechatLoginCodeRes.code).then(
+            // 注意这里返回的类型不是来自DevServer，而是来自微信服务器，不听取http定义的类型
+            (wechatTokenRes) => {
+              postUserLoginAPI(
+                wechatTokenRes.openid,
+                wechatTokenRes.session_key
+              ).then((userRes) => {
+                // 新注册的用户，弹窗尝试获取用户信息
+                if (userRes.code == 201) {
+                  popup.value.open();
                 }
-              );
-            },
-            // 微信授权失败
-            fail: (fail) => {
-              // ...todo 处理微信授权失败
-              console.log(fail);
-            },
-          });
+                userInfo.value = userRes.data;
+                uni.setStorage({
+                  key: "token",
+                  data: wechatTokenRes,
+                });
+                uni.showToast({
+                  title: "登录成功",
+                });
+              });
+            }
+          );
         },
-        // 用户授权失败
-        fail: function (err) {
-          // ...todo 处理用户授权失败
-          console.log(err);
+        // 微信授权失败
+        fail: () => {
+          uni.showToast({
+            title: "微信授权失败，请稍后再试",
+          });
         },
       });
     },
+    // TODO 用户session过期的情况处理
   });
 });
 
@@ -101,14 +94,17 @@ const getUserInfo = () => {
     desc: "for user info",
     // 成功获取到用户信息
     success: (success) => {
-      console.log(success);
       userInfo.value.userName = success.userInfo.nickName;
       userInfo.value.userAvatar = success.userInfo.avatarUrl;
+      uni.showToast({
+        title: "用户授权成功",
+      });
     },
-    // 用户拒绝授权 使用默认信息
+    // 用户拒绝授权
     fail: (fail) => {
-      // ...todo 处理用户拒绝授权
-      console.log(fail);
+      uni.showToast({
+        title: "用户拒绝授权访问，使用默认信息",
+      });
     },
   });
 };
@@ -150,3 +146,4 @@ const getUserInfo = () => {
   margin-top: 20px;
 }
 </style>
+@/api/postUserLogin

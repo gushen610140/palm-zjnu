@@ -6,6 +6,15 @@
     @scrolltolower="onScrollToLower"
     :scroll-top="pageProperty.scrolltop"
   >
+    <swiper indicator-dots autoplay circular class="banner">
+      <swiper-item v-for="banner in bannerList" :key="banner.url">
+        <image
+          class="banner_img"
+          :src="`http://127.0.0.1:8080/api/images/banners/${banner.url}`"
+          mode="scaleToFill"
+        />
+      </swiper-item>
+    </swiper>
     <view class="moment" v-for="moment in momentList" :key="moment.id">
       <view class="moment_container">
         <view class="avatar">
@@ -29,6 +38,16 @@ import { ref, onMounted } from "vue";
 import { Moment } from "@/types/Moment.ts";
 import { getMomentListAPI } from "@/api/getMomentListAPI";
 import { watch } from "vue";
+import { getBannerListAPI } from "@/api/getBannerList";
+import { Banner } from "@/types/Banner";
+import { onLoad } from "@dcloudio/uni-app";
+
+const bannerList = ref<Banner[]>();
+onLoad(() => {
+  getBannerListAPI().then((res) => {
+    bannerList.value = res;
+  });
+});
 
 const momentList = ref<Moment[]>([]);
 
@@ -77,7 +96,25 @@ watch(
 <style scoped>
 .container {
   width: 312px;
-  height: 360px;
+  height: 580px;
+}
+.banner {
+  margin: 0 auto;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  height: 160px;
+  width: 100%;
+}
+scroll-view::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  -webkit-appearance: none;
+  background: transparent;
+}
+.banner_img {
+  width: 100%;
+  height: 100%;
 }
 .moment {
   width: 312px;

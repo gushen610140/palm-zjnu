@@ -30,6 +30,8 @@ import { User } from "@/types/User";
 import { getUserInfoAPI } from "@/api/getUserInfoAPI";
 import { Result } from "@/types/Result";
 import { getTokenFromWechatAPI } from "@/api/getTokenFromWechatAPI";
+import { updateUserAvatarAPI } from "@/api/updateUserAvatarAPI";
+import { updateUserNameAPI } from "@/api/updateUserNameAPI";
 
 const userInfo = ref<User>({
   userId: "0000000",
@@ -96,6 +98,8 @@ const getUserInfo = () => {
     success: (success) => {
       userInfo.value.userName = success.userInfo.nickName;
       userInfo.value.userAvatar = success.userInfo.avatarUrl;
+      updateUserAvatarAPI(userInfo.value);
+      updateUserNameAPI(userInfo.value);
       uni.showToast({
         title: "用户授权成功",
       });

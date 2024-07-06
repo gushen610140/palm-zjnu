@@ -42,6 +42,12 @@
 			"style": {
 				"navigationBarTitleText": "发表圈子"
 			}
+		},
+		{
+			"path": "pages/editUserName/index",
+			"style": {
+				"navigationBarTitleText": "更改昵称"
+			}
 		}
 	],
 	"globalStyle": {

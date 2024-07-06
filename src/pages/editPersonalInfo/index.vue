@@ -6,7 +6,7 @@
       <image :src="userInfo.userAvatar" mode="scaleToFill" class="avatar_img" />
       <image src="@/static/enter.png" mode="scaleToFill" class="enter_img" />
     </view>
-    <view class="name box">
+    <view class="name box" @click="editName">
       <view class="text">昵称</view>
       <view class="fill"></view>
       <view class="name_text">{{ userInfo.userName }}</view>
@@ -40,6 +40,12 @@ onShow(() => {
     userInfo.value = UserInfoRes.data;
   });
 });
+
+const editName = () => {
+  uni.navigateTo({
+    url: "/pages/editUserName/index",
+  });
+};
 </script>
 
 <style scoped>

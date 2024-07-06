@@ -23,7 +23,7 @@
 
 <script lang="ts" setup>
 import { ref } from "vue";
-import { onReady } from "@dcloudio/uni-app";
+import { onReady, onShow } from "@dcloudio/uni-app";
 import { postUserLoginAPI } from "@/api/postUserLoginAPI";
 import { Token } from "@/types/Token";
 import { User } from "@/types/User";
@@ -118,6 +118,14 @@ const editUserInfo = () => {
     url: "/pages/editPersonalInfo/index",
   });
 };
+
+onShow(() => {
+  if (uni.getStorageSync("token")) {
+    getUserInfoAPI(uni.getStorageSync("token")).then((userInfoRes) => {
+      userInfo.value = userInfoRes.data;
+    });
+  }
+});
 </script>
 
 <style scoped>

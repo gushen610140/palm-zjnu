@@ -16,7 +16,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import { Moment } from "@/types/Moment.ts";
-import { getMomentListAPI } from "@/api/getMomentList";
+import { getMomentListAPI } from "@/api/getMomentListAPI";
 import { watch } from "vue";
 
 const momentList = ref<Moment[]>([]);
@@ -36,15 +36,15 @@ const pageProperty = ref<PageProperty>({
 const onScrollToLower = () => {
   pageProperty.value.current += 1;
   getMomentListAPI(pageProperty.value.current, pageProperty.value.size).then(
-    (res) => {
-      momentList.value = momentList.value.concat(res);
+    (momentListRes) => {
+      momentList.value = momentList.value.concat(momentListRes.data);
     }
   );
 };
 
 onMounted(() => {
-  getMomentListAPI(1, pageProperty.value.size).then((res) => {
-    momentList.value = res;
+  getMomentListAPI(1, pageProperty.value.size).then((momentListRes) => {
+    momentList.value = momentListRes.data;
   });
 });
 
@@ -55,10 +55,10 @@ const props = defineProps<{
 watch(
   () => props.updateComponent,
   () => {
-    getMomentListAPI(1, pageProperty.value.size).then((res) => {
-      momentList.value = res;
+    getMomentListAPI(1, pageProperty.value.size).then((momentListRes) => {
+      momentList.value = momentListRes.data;
+      pageProperty.value.scrolltop = Math.random();
     });
-    pageProperty.value.scrolltop = Math.random();
   }
 );
 </script>
@@ -73,3 +73,4 @@ watch(
   border-bottom: 1px solid #70707080;
 }
 </style>
+@/api/getMomentListAPI

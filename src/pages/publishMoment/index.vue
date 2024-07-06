@@ -17,21 +17,44 @@
 
 <script lang="ts" setup>
 import { ref } from "vue";
-import { addMomentAPI } from "@/api/addMoment.ts";
+import { addMomentAPI } from "@/api/addMomentAPI.ts";
 import { generateUUID } from "@/utils/generateUUID.ts";
+import { getUserInfoAPI } from "@/api/getUserInfoAPI";
 
 const content = ref("");
 
 const handlePublish = () => {
-  addMomentAPI(
-    generateUUID(),
-    "gushen",
-    "http://useravatar./url/avatar.jpg",
-    new Date(),
-    content.value
-  ).then(() => {
-    uni.navigateBack();
-  });
+  if (content.value == "") {
+    uni.showToast({
+      title: "内容不能为空",
+      icon: "error",
+    });
+  } else {
+    const token = uni.getStorageSync("token");
+    if (!token) {
+      uni.showToast({
+        title: "您尚未登录，正在为您跳转至登录页面",
+        icon: "none",
+      });
+      setTimeout(() => {
+        uni.switchTab({
+          url: "/pages/my/index",
+        });
+      }, 1500);
+    } else {
+      getUserInfoAPI(uni.getStorageSync("token")).then((userInfo) => {
+        addMomentAPI(
+          userInfo.data.userId,
+          userInfo.data.userName,
+          userInfo.data.userAvatar,
+          new Date(),
+          content.value
+        ).then(() => {
+          uni.navigateBack();
+        });
+      });
+    }
+  }
 };
 
 const handleAnonymousPublish = () => {

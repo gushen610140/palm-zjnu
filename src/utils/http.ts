@@ -14,12 +14,10 @@ const httpInterceptor = {
       'source-client': 'miniapp',
       ...options.header,
     }
-    // 4. 添加 token 请求头标识
-    // const memberStore = useMemberStore()
-    // const token = memberStore.profile?.token
-    // if (token) {
-    //   options.header.Authorization = token
-    // }
+    const token = uni.getStorageSync('token')
+    if (token) {
+      options.header.Authorization = token
+    }
   },
 }
 

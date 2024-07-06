@@ -9,7 +9,7 @@
     </view>
   </view>
   <view class="functions">
-    <button class="edit">编辑个人资料</button>
+    <button class="edit" @click="editUserInfo">编辑个人资料</button>
   </view>
   <uni-popup ref="popup" type="center">
     <uni-popup-dialog
@@ -106,6 +106,12 @@ const getUserInfo = () => {
         title: "用户拒绝授权访问，使用默认信息",
       });
     },
+  });
+};
+
+const editUserInfo = () => {
+  uni.navigateTo({
+    url: "/pages/editPersonalInfo/index",
   });
 };
 </script>

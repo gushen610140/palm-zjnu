@@ -32,9 +32,9 @@
 			}
 		},
 		{
-			"path": "pages/login/index",
+			"path": "pages/editPersonalInfo/index",
 			"style": {
-				"navigationBarTitleText": "登录"
+				"navigationBarTitleText": "编辑个人资料"
 			}
 		},
 		{

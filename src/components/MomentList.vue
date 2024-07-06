@@ -7,8 +7,19 @@
     :scroll-top="pageProperty.scrolltop"
   >
     <view class="moment" v-for="moment in momentList" :key="moment.id">
-      <view class="user_name">{{ moment.userName }}</view>
-      <view class="content">{{ moment.content }}</view>
+      <view class="moment_container">
+        <view class="avatar">
+          <image
+            :src="moment.userAvatar"
+            mode="scaleToFill"
+            class="avatar_img"
+          />
+        </view>
+        <view class="text">
+          <view class="user_name">{{ moment.userName }}</view>
+          <view class="content">{{ moment.content }}</view>
+        </view>
+      </view>
     </view>
   </scroll-view>
 </template>
@@ -72,5 +83,26 @@ watch(
   width: 312px;
   border-bottom: 1px solid #70707080;
 }
+.moment_container {
+  display: flex;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.avatar {
+  width: 30px;
+  height: 30px;
+}
+.avatar_img {
+  width: 100%;
+  height: 100%;
+}
+.text {
+  margin-left: 10px;
+}
+.user_name {
+  font-weight: bold;
+}
+.content {
+  margin-top: 10px;
+}
 </style>
-@/api/getMomentListAPI

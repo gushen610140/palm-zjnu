@@ -5,7 +5,7 @@
     </view>
     <view class="text">
       <view class="name"> {{ userInfo.userName }} </view>
-      <view class="code"> {{ userInfo.userId }} </view>
+      <view class="code"> {{ userInfo.userStudentNumber }} </view>
     </view>
   </view>
   <view class="functions">

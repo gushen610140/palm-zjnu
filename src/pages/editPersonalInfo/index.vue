@@ -9,25 +9,29 @@
     <view class="name box" @click="editName">
       <view class="text">昵称</view>
       <view class="fill"></view>
-      <view class="name_text">{{ userInfo.userName }}</view>
+      <view class="name_text content_text">{{ userInfo.userName }}</view>
       <image src="@/static/enter.png" mode="scaleToFill" class="enter_img" />
     </view>
-    <view class="student_number box">
+    <view class="student_number box" @click="editStudentNumber">
       <view class="text">学号</view>
       <view class="fill"></view>
-      <view class="student_number_text">{{ userInfo.userStudentNumber }}</view>
+      <view class="student_number_text content_text">{{
+        userInfo.userStudentNumber
+      }}</view>
       <image src="@/static/enter.png" mode="scaleToFill" class="enter_img" />
     </view>
-    <view class="wechat box">
+    <view class="wechat box" @click="editWechatNumber">
       <view class="text">微信号</view>
       <view class="fill"></view>
-      <view class="wechat_number_text">{{ userInfo.wechatNumber }}</view>
+      <view class="wechat_number_text content_text">{{
+        userInfo.wechatNumber
+      }}</view>
       <image src="@/static/enter.png" mode="scaleToFill" class="enter_img" />
     </view>
-    <view class="gender box">
+    <view class="gender box" @click="editGender">
       <view class="text">性别</view>
       <view class="fill"></view>
-      <view class="gender_text">{{ userInfo.gender }}</view>
+      <view class="gender_text content_text">{{ userInfo.gender }}</view>
       <image src="@/static/enter.png" mode="scaleToFill" class="enter_img" />
     </view>
   </view>
@@ -50,6 +54,24 @@ onShow(() => {
 const editName = () => {
   uni.navigateTo({
     url: "/pages/editUserName/index",
+  });
+};
+
+const editStudentNumber = () => {
+  uni.navigateTo({
+    url: "/pages/editSingleUserInfoPages/editStudentNumber",
+  });
+};
+
+const editWechatNumber = () => {
+  uni.navigateTo({
+    url: "/pages/editSingleUserInfoPages/editWechatNumber",
+  });
+};
+
+const editGender = () => {
+  uni.navigateTo({
+    url: "/pages/editSingleUserInfoPages/editGender",
   });
 };
 </script>
@@ -82,7 +104,7 @@ const editName = () => {
   height: 16px;
   margin-left: 10px;
 }
-.name_text {
+.content_text {
   color: #707070;
 }
 </style>

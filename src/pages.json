@@ -48,6 +48,21 @@
 			"style": {
 				"navigationBarTitleText": "更改昵称"
 			}
+		},{
+			"path": "pages/editSingleUserInfoPages/editGender",
+			"style": {
+				"navigationBarTitleText": "更改性别"
+			}
+		},{
+			"path": "pages/editSingleUserInfoPages/editStudentNumber",
+			"style": {
+				"navigationBarTitleText": "更改学号"
+			}
+		},{
+			"path": "pages/editSingleUserInfoPages/editWechatNumber",
+			"style": {
+				"navigationBarTitleText": "更改微信号"
+			}
 		}
 	],
 	"globalStyle": {

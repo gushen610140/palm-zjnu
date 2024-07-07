@@ -15,14 +15,20 @@
     <view class="student_number box">
       <view class="text">学号</view>
       <view class="fill"></view>
+      <view class="student_number_text">{{ userInfo.userStudentNumber }}</view>
+      <image src="@/static/enter.png" mode="scaleToFill" class="enter_img" />
     </view>
     <view class="wechat box">
       <view class="text">微信号</view>
       <view class="fill"></view>
+      <view class="wechat_number_text">{{ userInfo.wechatNumber }}</view>
+      <image src="@/static/enter.png" mode="scaleToFill" class="enter_img" />
     </view>
     <view class="gender box">
       <view class="text">性别</view>
       <view class="fill"></view>
+      <view class="gender_text">{{ userInfo.gender }}</view>
+      <image src="@/static/enter.png" mode="scaleToFill" class="enter_img" />
     </view>
   </view>
 </template>

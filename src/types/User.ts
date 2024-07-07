@@ -3,5 +3,7 @@ export interface User {
   userName: string;
   userAvatar: string;
   userStudentNumber: string;
+  gender: string;
+  wechatNumber: string;
   session: string;
 }

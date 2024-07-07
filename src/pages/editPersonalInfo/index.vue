@@ -1,6 +1,6 @@
 <template>
   <view class="container">
-    <view class="avatar box">
+    <view class="avatar box" @click="editAvatar">
       <view class="text">头像</view>
       <view class="fill"></view>
       <image :src="userInfo.userAvatar" mode="scaleToFill" class="avatar_img" />
@@ -42,6 +42,7 @@ import { ref } from "vue";
 import type { User } from "@/types/User";
 import { getUserInfoAPI } from "@/api/getUserInfoAPI";
 import { onShow } from "@dcloudio/uni-app";
+import { updateUserAvatarAPI } from "@/api/updateUserAvatarAPI";
 
 const userInfo = ref<User>({});
 
@@ -72,6 +73,31 @@ const editWechatNumber = () => {
 const editGender = () => {
   uni.navigateTo({
     url: "/pages/editSingleUserInfoPages/editGender",
+  });
+};
+
+const editAvatar = () => {
+  uni.chooseImage({
+    success: (chooseImageRes) => {
+      const tempFilePaths = chooseImageRes.tempFilePaths;
+      uni.uploadFile({
+        url: "http://127.0.0.1:8080/api/images/upload",
+        filePath: tempFilePaths[0],
+        name: "file",
+        success: (uploadFileRes) => {
+          getUserInfoAPI(uni.getStorageSync("token")).then((UserInfoRes) => {
+            UserInfoRes.data.userAvatar = JSON.parse(uploadFileRes.data).data;
+            updateUserAvatarAPI(UserInfoRes.data).then(() => {
+              userInfo.value.userAvatar = `http://127.0.0.1:8080/api/images/${UserInfoRes.data.userAvatar}`;
+              uni.showToast({
+                title: "头像修改成功",
+                icon: "success",
+              });
+            });
+          });
+        },
+      });
+    },
   });
 };
 </script>

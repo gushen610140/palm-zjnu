@@ -35,7 +35,7 @@ import { ref } from "vue";
 import { addMomentAPI } from "@/api/addMomentAPI.ts";
 import { generateUUID } from "@/utils/generateUUID.ts";
 import { getUserInfoAPI } from "@/api/getUserInfoAPI";
-import { onShow } from "@dcloudio/uni-app";
+import { onShow, onLoad } from "@dcloudio/uni-app";
 import type { User } from "@/types/User";
 import { path } from "@/utils/path";
 
@@ -114,10 +114,19 @@ const handleAddImage = () => {
 };
 
 const handlePreviewImage = (img: string) => {
-  uni.previewImage({
-    urls: [img],
+  uni.navigateTo({
+    url: `/pages/functionPages/imagePreviewPage?img=${img}`,
   });
 };
+
+onLoad(() => {
+  uni.$on("deleteImage", (props) => {
+    imageList.value = imageList.value.filter((item) => item !== props.img);
+    if (imageList.value.length < 9) {
+      isFull.value = false;
+    }
+  });
+});
 </script>
 
 <style scoped>

@@ -63,6 +63,11 @@
 			"style": {
 				"navigationBarTitleText": "更改微信号"
 			}
+		},{
+			"path": "pages/functionPages/imagePreviewPage",
+			"style": {
+				"navigationBarTitleText": "图片预览"
+			}
 		}
 	],
 	"globalStyle": {

@@ -13,14 +13,13 @@
     />
   </view>
   <view class="moments">
-    <MomentList :updateComponent="updateComponent" />
+    <MomentList />
   </view>
 </template>
 
 <script setup lang="ts">
 import MomentList from "@/components/MomentList.vue";
 import { ref } from "vue";
-import { onShow } from "@dcloudio/uni-app";
 
 const searchContent = ref("");
 const onPublish = () => {
@@ -28,11 +27,6 @@ const onPublish = () => {
     url: "/pages/publishMoment/index",
   });
 };
-
-const updateComponent = ref<number>(0);
-onShow(() => {
-  updateComponent.value += 1;
-});
 </script>
 
 <style scoped>

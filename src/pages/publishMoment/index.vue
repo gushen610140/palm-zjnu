@@ -78,6 +78,7 @@ const handlePublish = () => {
           JSON.stringify(imageList.value)
         ).then(() => {
           uni.navigateBack();
+          uni.$emit("backTop");
         });
       });
     }

@@ -57,6 +57,12 @@ onLoad(() => {
   getBannerListAPI().then((res) => {
     bannerList.value = res;
   });
+  uni.$on("backTop", () => {
+    getMomentListAPI(1, pageProperty.value.size).then((momentListRes) => {
+      momentList.value = momentListRes.data;
+      pageProperty.value.scrolltop = Math.random();
+    });
+  });
 });
 
 const momentList = ref<Moment[]>([]);
@@ -87,20 +93,6 @@ onMounted(() => {
     momentList.value = momentListRes.data;
   });
 });
-
-const props = defineProps<{
-  updateComponent: number;
-}>();
-
-watch(
-  () => props.updateComponent,
-  () => {
-    getMomentListAPI(1, pageProperty.value.size).then((momentListRes) => {
-      momentList.value = momentListRes.data;
-      pageProperty.value.scrolltop = Math.random();
-    });
-  }
-);
 
 const preview = (cur: string, img: string[]) => {
   uni.previewImage({

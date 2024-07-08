@@ -10,7 +10,7 @@ export interface Moment {
 
   id: string;
 
-  images: string[] | null;
+  images: string | null;
 
   likes: number;
 

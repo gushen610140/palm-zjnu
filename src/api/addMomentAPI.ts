@@ -1,6 +1,13 @@
 import { http } from "@/utils/http";
 
-export const addMomentAPI = (userId:string, userName:string, userAvatar:string, date:string, content:string) => {
+export const addMomentAPI = (
+  userId:string, 
+  userName:string, 
+  userAvatar:string, 
+  date:string, 
+  content:string,
+  images: string
+) => {
   return http<null>({
     url: "/api/moments",
     method: "POST",
@@ -9,7 +16,8 @@ export const addMomentAPI = (userId:string, userName:string, userAvatar:string, 
       userName,
       userAvatar,
       date,
-      content
+      content,
+      images
     },
   })
 };

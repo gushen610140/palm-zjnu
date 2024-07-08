@@ -74,7 +74,8 @@ const handlePublish = () => {
           userInfo.data.userName,
           userInfo.data.userAvatar,
           new Date(),
-          content.value
+          content.value,
+          JSON.stringify(imageList.value)
         ).then(() => {
           uni.navigateBack();
         });

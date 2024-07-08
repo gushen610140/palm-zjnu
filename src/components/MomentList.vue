@@ -27,6 +27,16 @@
         <view class="text">
           <view class="user_name">{{ moment.userName }}</view>
           <view class="content">{{ moment.content }}</view>
+          <view class="image_container">
+            <image
+              v-for="(image, index) in JSON.parse(moment.images)"
+              :key="index"
+              :src="image"
+              mode="scaleToFill"
+              class="img"
+              @click="preview(image, JSON.parse(moment.images))"
+            />
+          </view>
         </view>
       </view>
     </view>
@@ -91,6 +101,13 @@ watch(
     });
   }
 );
+
+const preview = (cur: string, img: string[]) => {
+  uni.previewImage({
+    urls: img,
+    current: cur,
+  });
+};
 </script>
 
 <style scoped>
@@ -141,5 +158,15 @@ scroll-view::-webkit-scrollbar {
 }
 .content {
   margin-top: 10px;
+}
+.image_container {
+  display: grid;
+  grid-template-columns: repeat(3, 80px);
+  grid-gap: 5px;
+  margin-top: 5px;
+}
+.img {
+  width: 80px;
+  height: 80px;
 }
 </style>

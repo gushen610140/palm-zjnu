@@ -12,7 +12,7 @@ export interface Moment {
 
   images: string | null;
 
-  likes: number;
+  likes: string | null;
 
   userAvatar: string;
 

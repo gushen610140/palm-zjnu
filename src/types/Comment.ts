@@ -2,15 +2,18 @@ export interface Comment {
 
   id: string;
 
-  content: string;
-
-  date: string;
-
-  likes: number;
-
-  userAvator: string;
-
   userId: string;
 
   userName: string;
+
+  date: string;
+
+  content: string;
+
+  toUserId: string;
+
+  toUserName: string;
+
+  momentId: string;
+
 }

@@ -6,7 +6,8 @@ export const addMomentAPI = (
   userAvatar:string, 
   date:string, 
   content:string,
-  images: string
+  images: string,
+  likes: string
 ) => {
   return http<null>({
     url: "/api/moments",
@@ -17,7 +18,8 @@ export const addMomentAPI = (
       userAvatar,
       date,
       content,
-      images
+      images,
+      likes
     },
   })
 };

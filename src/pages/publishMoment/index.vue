@@ -75,7 +75,8 @@ const handlePublish = () => {
           userInfo.data.userAvatar,
           new Date(),
           content.value,
-          JSON.stringify(imageList.value)
+          JSON.stringify(imageList.value),
+          JSON.stringify([])
         ).then(() => {
           uni.navigateBack();
           uni.$emit("backTop");

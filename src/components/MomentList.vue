@@ -58,13 +58,39 @@
             <view class="likes_number">{{
               JSON.parse(moment.likes).length
             }}</view>
-            <image src="@/static/comment.png" class="comment"></image>
+            <image
+              src="@/static/comment.png"
+              class="comment"
+              @click="handleComment(moment)"
+            ></image>
           </view>
-          <view class="others"> </view>
+          <view
+            class="comments_container"
+            v-if="JSON.parse(moment.comments).length > 0"
+          >
+            <view
+              class="comment_item"
+              v-for="commentItem in JSON.parse(moment.comments)"
+              :key="commentItem.id"
+            >
+              <text class="comment_name">{{ commentItem.userName }}</text>
+              :
+              <text class="comment_content">{{ commentItem.content }}</text>
+            </view>
+          </view>
         </view>
       </view>
     </view>
   </scroll-view>
+  <uni-popup ref="publishComment" type="dialog">
+    <uni-popup-dialog
+      mode="input"
+      title="输入评论内容"
+      :value="commentInput"
+      placeholder="请不要发表不当言论哦"
+      @confirm="dialogInputConfirm"
+    ></uni-popup-dialog>
+  </uni-popup>
 </template>
 
 <script setup lang="ts">
@@ -77,6 +103,10 @@ import { Banner } from "@/types/Banner";
 import { onLoad } from "@dcloudio/uni-app";
 import type { Token } from "@/types/Token";
 import { putMomentLikesAPI } from "@/api/momentsAPI/putMomentLikesAPI";
+import type { Comment } from "@/types/Comment";
+import { generateUUID } from "@/utils/generateUUID";
+import { getUserInfoAPI } from "@/api/getUserInfoAPI";
+import { postMomentCommentsAPI } from "@/api/momentsAPI/postMomentCommentsAPI";
 
 const bannerList = ref<Banner[]>();
 onLoad(() => {
@@ -145,12 +175,58 @@ const addLike = (momentId: string) => {
     }
   });
 };
+
+const publishComment = ref();
+const commentInput = ref("");
+const currentOpenedMoment = ref<Moment>();
+
+const handleComment = (moment: Moment) => {
+  currentOpenedMoment.value = moment;
+  publishComment.value.open();
+};
+
+const dialogInputConfirm = (value: string) => {
+  if (value == "") {
+    uni.showToast({
+      title: "评论内容不能为空",
+      icon: "none",
+    });
+  } else if (!uni.getStorageSync("token").openid) {
+    uni.showToast({
+      title: "请先登录",
+      icon: "none",
+    });
+  } else {
+    getUserInfoAPI(uni.getStorageSync("token")).then((userInfoRes) => {
+      const comment: Comment = {
+        id: generateUUID(),
+        userId: userInfoRes.data.userId,
+        userName: userInfoRes.data.userName,
+        date: new Date(),
+        content: value,
+        toUserId: currentOpenedMoment.value.userId,
+        toUserName: currentOpenedMoment.value.userName,
+        momentId: currentOpenedMoment.value.id,
+      };
+      postMomentCommentsAPI(comment).then((newMomentRes) => {
+        commentInput.value = "";
+        momentList.value.find(
+          (item) => item.id == currentOpenedMoment.value.id
+        ).comments = newMomentRes.data.comments;
+        uni.showToast({
+          title: "评论成功",
+          icon: "success",
+        });
+      });
+    });
+  }
+};
 </script>
 
 <style scoped>
 .container {
   width: 312px;
-  height: 580px;
+  height: 610px;
 }
 .banner {
   margin: 0 auto;
@@ -159,12 +235,11 @@ const addLike = (momentId: string) => {
   height: 160px;
   width: 100%;
 }
-scroll-view::-webkit-scrollbar {
-  display: none !important;
-  width: 0 !important;
-  height: 0 !important;
-  -webkit-appearance: none;
-  background: transparent;
+scroll-view ::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  color: transparent;
+  display: none;
 }
 .banner_img {
   width: 100%;
@@ -189,6 +264,7 @@ scroll-view::-webkit-scrollbar {
 }
 .text {
   margin-left: 10px;
+  width: 260px;
 }
 .user_name {
   font-weight: bold;
@@ -229,5 +305,22 @@ scroll-view::-webkit-scrollbar {
 .comment {
   width: 19px;
   height: 19px;
+}
+.comments_container {
+  margin-top: 10px;
+  padding: 5px;
+  background-color: #70707030;
+  width: 250px;
+  border-radius: 5px;
+}
+.comment_item {
+  margin-bottom: 5px;
+}
+.comment_name {
+  color: #053e74;
+  font-size: 15px;
+}
+.comment_content {
+  font-size: 15px;
 }
 </style>

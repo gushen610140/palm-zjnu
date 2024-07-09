@@ -2,7 +2,7 @@ import { Comment } from './Comment.ts';
 
 export interface Moment {
 
-  comments: Comment[] | null;
+  comments: string | null;
 
   content: null | string;
 

@@ -76,6 +76,7 @@ const handlePublish = () => {
           new Date(),
           content.value,
           JSON.stringify(imageList.value),
+          JSON.stringify([]),
           JSON.stringify([])
         ).then(() => {
           uni.navigateBack();

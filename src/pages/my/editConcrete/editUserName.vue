@@ -1,35 +1,34 @@
 <template>
   <input
-    v-model="updatedGender"
-    placeholder="性别不只可以填男女哦！"
+    v-model="updatedUserName"
+    placeholder="不允许使用空白昵称"
     placeholder-class="input-placeholder"
     class="input_box"
   />
-  <button @click="updateGender" class="button">保存</button>
+  <button @click="updateUserName" class="button">保存</button>
 </template>
 
 <script lang="ts" setup>
 import { ref } from "vue";
-import { updateUserGenderAPI } from "@/api/updateUserGenderAPI";
-import { getUserInfoAPI } from "@/api/getUserInfoAPI";
 import { onShow } from "@dcloudio/uni-app";
+import { putUserAPI, getUserInfoAPI } from "@/api/userAPIs";
 
-const updatedGender = ref("");
+const updatedUserName = ref("");
 
 onShow(() => {
   getUserInfoAPI(uni.getStorageSync("token")).then((UserInfoRes) => {
     const userInfo = UserInfoRes.data;
-    updatedGender.value = userInfo.gender;
+    updatedUserName.value = userInfo.userName;
   });
 });
 
-const updateGender = () => {
+const updateUserName = () => {
   getUserInfoAPI(uni.getStorageSync("token")).then((UserInfoRes) => {
     const userInfo = UserInfoRes.data;
-    userInfo.gender = updatedGender.value;
-    updateUserGenderAPI(userInfo).then(() => {
+    userInfo.userName = updatedUserName.value;
+    putUserAPI(userInfo).then(() => {
       uni.showToast({
-        title: "性别修改成功",
+        title: "昵称修改成功",
         icon: "success",
       });
       uni.navigateBack();

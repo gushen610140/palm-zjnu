@@ -18,13 +18,13 @@
 </template>
 
 <script setup lang="ts">
-import MomentList from "@/components/MomentList.vue";
 import { ref } from "vue";
+import MomentList from "@/components/MomentList.vue";
 
 const searchContent = ref("");
 const onPublish = () => {
   uni.navigateTo({
-    url: "/pages/publishMoment/index",
+    url: "/pages/index/publishMoment",
   });
 };
 </script>

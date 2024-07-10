@@ -1,7 +1,7 @@
 <template>
   <view class="myinfo">
     <view class="avatar">
-      <image class="avatar_img" :src="userInfo.userAvatar" mode="scaleToFill" />
+      <image class="avatar_img" :src="computedUserAvatar" mode="scaleToFill" />
     </view>
     <view class="text">
       <view class="name"> {{ userInfo.userName }} </view>
@@ -22,23 +22,25 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { onReady, onShow } from "@dcloudio/uni-app";
-import { postUserLoginAPI } from "@/api/postUserLoginAPI";
-import { Token } from "@/types/Token";
-import { User } from "@/types/User";
-import { getUserInfoAPI } from "@/api/getUserInfoAPI";
-import { Result } from "@/types/Result";
+import { Token, User, Result } from "@/types/model";
 import { getTokenFromWechatAPI } from "@/api/getTokenFromWechatAPI";
-import { updateUserAvatarAPI } from "@/api/updateUserAvatarAPI";
-import { updateUserNameAPI } from "@/api/updateUserNameAPI";
+import { putUserAPI, postUserLoginAPI, getUserInfoAPI } from "@/api/userAPIs";
+import { path } from "@/utils/path";
 
-const userInfo = ref<User>({
-  userId: "0000000",
-  userName: "游客",
-  userAvatar: "http://127.0.0.1:8080/api/images/avatars/default.png",
-});
+const userInfo = ref<User>({});
 const popup = ref();
+
+const computedUserAvatar = computed(() => {
+  if (!userInfo.value.userAvatar) {
+    return path.imagePath + "/" + "avatars/default.png";
+  } else if (!userInfo.value.userAvatar.startsWith("http")) {
+    return path.imagePath + "/" + userInfo.value.userAvatar;
+  } else {
+    return userInfo.value.userAvatar;
+  }
+});
 
 onReady(() => {
   uni.getStorage({
@@ -98,8 +100,7 @@ const getUserInfo = () => {
     success: (success) => {
       userInfo.value.userName = success.userInfo.nickName;
       userInfo.value.userAvatar = success.userInfo.avatarUrl;
-      updateUserAvatarAPI(userInfo.value);
-      updateUserNameAPI(userInfo.value);
+      putUserAPI(userInfo.value);
       uni.showToast({
         title: "用户授权成功",
       });
@@ -115,7 +116,7 @@ const getUserInfo = () => {
 
 const editUserInfo = () => {
   uni.navigateTo({
-    url: "/pages/editPersonalInfo/index",
+    url: "/pages/my/edit",
   });
 };
 

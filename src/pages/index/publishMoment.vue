@@ -1,6 +1,6 @@
 <template>
   <view class="publish_container">
-    <image class="avatar" :src="userInfo.userAvatar"></image>
+    <image class="avatar" :src="computedUserAvatar"></image>
     <view style="flex: 1"></view>
     <button
       size="mini"
@@ -31,15 +31,25 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
-import { addMomentAPI } from "@/api/addMomentAPI.ts";
-import { generateUUID } from "@/utils/generateUUID.ts";
-import { getUserInfoAPI } from "@/api/getUserInfoAPI";
+import { ref, computed } from "vue";
 import { onShow, onLoad } from "@dcloudio/uni-app";
-import type { User } from "@/types/User";
+import { postMomentAPI } from "@/api/momentAPIs";
+import { getUserInfoAPI } from "@/api/userAPIs";
+import type { User } from "@/types/models";
+import { generateUUID } from "@/utils/generateUUID.ts";
 import { path } from "@/utils/path";
 
 const userInfo = ref<User>({});
+
+const computedUserAvatar = computed(() => {
+  if (!userInfo.value?.userAvatar) {
+    return path.imagePath + "/" + "avatars/default.png";
+  } else if (!userInfo.value.userAvatar.startsWith("http")) {
+    return path.imagePath + "/" + userInfo.value.userAvatar;
+  } else {
+    return userInfo.value.userAvatar;
+  }
+});
 
 onShow(() => {
   getUserInfoAPI(uni.getStorageSync("token")).then((userInfoRes) => {
@@ -64,12 +74,12 @@ const handlePublish = () => {
       });
       setTimeout(() => {
         uni.switchTab({
-          url: "/pages/my/index",
+          url: "/pages/my/my",
         });
       }, 1500);
     } else {
       getUserInfoAPI(uni.getStorageSync("token")).then((userInfo) => {
-        addMomentAPI(
+        postMomentAPI(
           userInfo.data.userId,
           userInfo.data.userName,
           userInfo.data.userAvatar,
@@ -101,12 +111,12 @@ const handleAddImage = () => {
       success: (chooseImageRes) => {
         const tempFilePaths = chooseImageRes.tempFilePaths;
         uni.uploadFile({
-          url: `${path.imagePath}/upload`,
+          url: `${path.devServer}/api/image`,
           filePath: tempFilePaths[0],
           name: "file",
           success: (uploadFileRes) => {
             const fileName = JSON.parse(uploadFileRes.data).data;
-            imageList.value.push(`${path.imagePath}/${fileName}`);
+            imageList.value.push(`${path.devServer}/api/image/${fileName}`);
             if (imageList.value.length >= 9) {
               isFull.value = true;
             }

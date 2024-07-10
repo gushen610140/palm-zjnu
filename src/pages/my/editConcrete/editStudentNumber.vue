@@ -1,35 +1,34 @@
 <template>
   <input
-    v-model="updatedWechatNumber"
-    placeholder="您的微信号将作为联系您的方式"
+    v-model="updatedStudentNumber"
+    placeholder="请填写真实的学号"
     placeholder-class="input-placeholder"
     class="input_box"
   />
-  <button @click="updateWechatNumber" class="button">保存</button>
+  <button @click="updateStudentNumber" class="button">保存</button>
 </template>
 
 <script lang="ts" setup>
 import { ref } from "vue";
-import { updateWechatNumberAPI } from "@/api/updateWechatNumberAPI";
-import { getUserInfoAPI } from "@/api/getUserInfoAPI";
 import { onShow } from "@dcloudio/uni-app";
+import { putUserAPI, getUserInfoAPI } from "@/api/userAPIs";
 
-const updatedWechatNumber = ref("");
+const updatedStudentNumber = ref("");
 
 onShow(() => {
   getUserInfoAPI(uni.getStorageSync("token")).then((UserInfoRes) => {
     const userInfo = UserInfoRes.data;
-    updatedWechatNumber.value = userInfo.wechatNumber;
+    updatedStudentNumber.value = userInfo.userStudentNumber;
   });
 });
 
-const updateWechatNumber = () => {
+const updateStudentNumber = () => {
   getUserInfoAPI(uni.getStorageSync("token")).then((UserInfoRes) => {
     const userInfo = UserInfoRes.data;
-    userInfo.wechatNumber = updatedWechatNumber.value;
-    updateWechatNumberAPI(userInfo).then(() => {
+    userInfo.userStudentNumber = updatedStudentNumber.value;
+    putUserAPI(userInfo).then(() => {
       uni.showToast({
-        title: "微信号修改成功",
+        title: "学号修改成功",
         icon: "success",
       });
       uni.navigateBack();

@@ -4,8 +4,8 @@
 </template>
 
 <script setup lang="ts">
-import { onLoad } from "@dcloudio/uni-app";
 import { ref } from "vue";
+import { onLoad } from "@dcloudio/uni-app";
 
 const imgUrl = ref<string>("");
 

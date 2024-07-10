@@ -10,7 +10,7 @@
       <swiper-item v-for="banner in bannerList" :key="banner.url">
         <image
           class="banner_img"
-          :src="`http://127.0.0.1:8080/api/images/banners/${banner.url}`"
+          :src="`${path.devServer}/api/image/banners/${banner.url}`"
           mode="scaleToFill"
         />
       </swiper-item>
@@ -94,27 +94,26 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
-import { Moment } from "@/types/Moment.ts";
-import { getMomentListAPI } from "@/api/getMomentListAPI";
-import { watch } from "vue";
-import { getBannerListAPI } from "@/api/getBannerList";
-import { Banner } from "@/types/Banner";
+import { ref, onMounted, watch } from "vue";
 import { onLoad } from "@dcloudio/uni-app";
-import type { Token } from "@/types/Token";
-import { putMomentLikesAPI } from "@/api/momentsAPI/putMomentLikesAPI";
-import type { Comment } from "@/types/Comment";
+import type { Moment, Comment, Token, Banner } from "@/types/model";
+import {
+  getMomentsAPI,
+  putMomentLikesAPI,
+  postMomentCommentsAPI,
+} from "@/api/momentAPIs";
+import { getBannerListAPI } from "@/api/getBannerList";
 import { generateUUID } from "@/utils/generateUUID";
-import { getUserInfoAPI } from "@/api/getUserInfoAPI";
-import { postMomentCommentsAPI } from "@/api/momentsAPI/postMomentCommentsAPI";
+import { path } from "@/utils/path";
+import { getUserInfoAPI } from "@/api/userAPIs";
 
 const bannerList = ref<Banner[]>();
 onLoad(() => {
   getBannerListAPI().then((res) => {
-    bannerList.value = res;
+    bannerList.value = res.data;
   });
   uni.$on("backTop", () => {
-    getMomentListAPI(1, pageProperty.value.size).then((momentListRes) => {
+    getMomentsAPI(1, pageProperty.value.size).then((momentListRes) => {
       momentList.value = momentListRes.data;
       pageProperty.value.scrolltop = Math.random();
     });
@@ -137,7 +136,7 @@ const pageProperty = ref<PageProperty>({
 
 const onScrollToLower = () => {
   pageProperty.value.current += 1;
-  getMomentListAPI(pageProperty.value.current, pageProperty.value.size).then(
+  getMomentsAPI(pageProperty.value.current, pageProperty.value.size).then(
     (momentListRes) => {
       momentList.value = momentList.value.concat(momentListRes.data);
     }
@@ -145,7 +144,7 @@ const onScrollToLower = () => {
 };
 
 onMounted(() => {
-  getMomentListAPI(1, pageProperty.value.size).then((momentListRes) => {
+  getMomentsAPI(1, pageProperty.value.size).then((momentListRes) => {
     momentList.value = momentListRes.data;
   });
 });
@@ -324,3 +323,5 @@ scroll-view ::-webkit-scrollbar {
   font-size: 15px;
 }
 </style>
+@/types/model/Moment@/types/model/Banner@/types/model/Comment
+@/types/model/Moment@/types/model/Banner@/types/model/Comment

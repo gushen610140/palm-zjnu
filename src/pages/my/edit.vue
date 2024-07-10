@@ -3,16 +3,19 @@
     <view class="avatar box" @click="editAvatar">
       <view class="text">头像</view>
       <view class="fill"></view>
-      <image :src="userInfo.userAvatar" mode="scaleToFill" class="avatar_img" />
+      <image :src="computedUserAvatar" mode="scaleToFill" class="avatar_img" />
       <image src="@/static/enter.png" mode="scaleToFill" class="enter_img" />
     </view>
-    <view class="name box" @click="editName">
+    <view class="name box" @click="navigateToEditPage('editUserName')">
       <view class="text">昵称</view>
       <view class="fill"></view>
       <view class="name_text content_text">{{ userInfo.userName }}</view>
       <image src="@/static/enter.png" mode="scaleToFill" class="enter_img" />
     </view>
-    <view class="student_number box" @click="editStudentNumber">
+    <view
+      class="student_number box"
+      @click="navigateToEditPage('editStudentNumber')"
+    >
       <view class="text">学号</view>
       <view class="fill"></view>
       <view class="student_number_text content_text">{{
@@ -20,7 +23,7 @@
       }}</view>
       <image src="@/static/enter.png" mode="scaleToFill" class="enter_img" />
     </view>
-    <view class="wechat box" @click="editWechatNumber">
+    <view class="wechat box" @click="navigateToEditPage('editWechatNumber')">
       <view class="text">微信号</view>
       <view class="fill"></view>
       <view class="wechat_number_text content_text">{{
@@ -28,7 +31,7 @@
       }}</view>
       <image src="@/static/enter.png" mode="scaleToFill" class="enter_img" />
     </view>
-    <view class="gender box" @click="editGender">
+    <view class="gender box" @click="navigateToEditPage('editGender')">
       <view class="text">性别</view>
       <view class="fill"></view>
       <view class="gender_text content_text">{{ userInfo.gender }}</view>
@@ -38,13 +41,23 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
-import type { User } from "@/types/User";
-import { getUserInfoAPI } from "@/api/getUserInfoAPI";
+import { ref, computed } from "vue";
 import { onShow } from "@dcloudio/uni-app";
-import { updateUserAvatarAPI } from "@/api/updateUserAvatarAPI";
+import type { User } from "@/types/model";
+import { path } from "@/utils/path";
+import { putUserAPI, getUserInfoAPI } from "@/api/userAPIs";
 
 const userInfo = ref<User>({});
+
+const computedUserAvatar = computed(() => {
+  if (!userInfo.value.userAvatar) {
+    return path.imagePath + "/" + "avatars/default.png";
+  } else if (!userInfo.value.userAvatar.startsWith("http")) {
+    return path.imagePath + "/" + userInfo.value.userAvatar;
+  } else {
+    return userInfo.value.userAvatar;
+  }
+});
 
 onShow(() => {
   getUserInfoAPI(uni.getStorageSync("token")).then((UserInfoRes) => {
@@ -52,27 +65,9 @@ onShow(() => {
   });
 });
 
-const editName = () => {
+const navigateToEditPage = (pageName: string) => {
   uni.navigateTo({
-    url: "/pages/editUserName/index",
-  });
-};
-
-const editStudentNumber = () => {
-  uni.navigateTo({
-    url: "/pages/editSingleUserInfoPages/editStudentNumber",
-  });
-};
-
-const editWechatNumber = () => {
-  uni.navigateTo({
-    url: "/pages/editSingleUserInfoPages/editWechatNumber",
-  });
-};
-
-const editGender = () => {
-  uni.navigateTo({
-    url: "/pages/editSingleUserInfoPages/editGender",
+    url: `/pages/my/editConcrete/${pageName}`,
   });
 };
 
@@ -81,14 +76,14 @@ const editAvatar = () => {
     success: (chooseImageRes) => {
       const tempFilePaths = chooseImageRes.tempFilePaths;
       uni.uploadFile({
-        url: "http://127.0.0.1:8080/api/images/upload",
+        url: `${path.devServer}/api/image`,
         filePath: tempFilePaths[0],
         name: "file",
         success: (uploadFileRes) => {
           getUserInfoAPI(uni.getStorageSync("token")).then((UserInfoRes) => {
-            UserInfoRes.data.userAvatar = JSON.parse(uploadFileRes.data).data;
-            updateUserAvatarAPI(UserInfoRes.data).then(() => {
-              userInfo.value.userAvatar = `http://127.0.0.1:8080/api/images/${UserInfoRes.data.userAvatar}`;
+            UserInfoRes.data.userAvatar = `${path.devServer}/api/image/${JSON.parse(uploadFileRes.data).data}`;
+            putUserAPI(UserInfoRes.data).then(() => {
+              userInfo.value.userAvatar = UserInfoRes.data.userAvatar;
               uni.showToast({
                 title: "头像修改成功",
                 icon: "success",

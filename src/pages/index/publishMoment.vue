@@ -1,6 +1,6 @@
 <template>
   <view class="publish_container">
-    <image class="avatar" :src="computedUserAvatar"></image>
+    <image class="avatar" :src="userInfo.userAvatar"></image>
     <view style="flex: 1"></view>
     <button
       size="mini"
@@ -40,16 +40,6 @@ import { generateUUID } from "@/utils/generateUUID.ts";
 import { path } from "@/utils/path";
 
 const userInfo = ref<User>({});
-
-const computedUserAvatar = computed(() => {
-  if (!userInfo.value?.userAvatar) {
-    return path.imagePath + "/" + "avatars/default.png";
-  } else if (!userInfo.value.userAvatar.startsWith("http")) {
-    return path.imagePath + "/" + userInfo.value.userAvatar;
-  } else {
-    return userInfo.value.userAvatar;
-  }
-});
 
 onShow(() => {
   getUserInfoAPI(uni.getStorageSync("token")).then((userInfoRes) => {
@@ -111,12 +101,11 @@ const handleAddImage = () => {
       success: (chooseImageRes) => {
         const tempFilePaths = chooseImageRes.tempFilePaths;
         uni.uploadFile({
-          url: `${path.devServer}/api/image`,
+          url: `${path.devServer}/api/upload`,
           filePath: tempFilePaths[0],
           name: "file",
           success: (uploadFileRes) => {
-            const fileName = JSON.parse(uploadFileRes.data).data;
-            imageList.value.push(`${path.devServer}/api/image/${fileName}`);
+            imageList.value.push(JSON.parse(uploadFileRes.data).data);
             if (imageList.value.length >= 9) {
               isFull.value = true;
             }

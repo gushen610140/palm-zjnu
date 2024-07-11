@@ -1,7 +1,7 @@
 <template>
   <view class="myinfo">
     <view class="avatar">
-      <image class="avatar_img" :src="computedUserAvatar" mode="scaleToFill" />
+      <image class="avatar_img" :src="userInfo.userAvatar" mode="scaleToFill" />
     </view>
     <view class="text">
       <view class="name"> {{ userInfo.userName }} </view>

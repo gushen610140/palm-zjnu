@@ -3,7 +3,7 @@
     <view class="avatar box" @click="editAvatar">
       <view class="text">头像</view>
       <view class="fill"></view>
-      <image :src="computedUserAvatar" mode="scaleToFill" class="avatar_img" />
+      <image :src="userInfo.userAvatar" mode="scaleToFill" class="avatar_img" />
       <image src="@/static/enter.png" mode="scaleToFill" class="enter_img" />
     </view>
     <view class="name box" @click="navigateToEditPage('editUserName')">
@@ -49,16 +49,6 @@ import { putUserAPI, getUserInfoAPI } from "@/api/userAPIs";
 
 const userInfo = ref<User>({});
 
-const computedUserAvatar = computed(() => {
-  if (!userInfo.value.userAvatar) {
-    return path.imagePath + "/" + "avatars/default.png";
-  } else if (!userInfo.value.userAvatar.startsWith("http")) {
-    return path.imagePath + "/" + userInfo.value.userAvatar;
-  } else {
-    return userInfo.value.userAvatar;
-  }
-});
-
 onShow(() => {
   getUserInfoAPI(uni.getStorageSync("token")).then((UserInfoRes) => {
     userInfo.value = UserInfoRes.data;
@@ -76,20 +66,20 @@ const editAvatar = () => {
     success: (chooseImageRes) => {
       const tempFilePaths = chooseImageRes.tempFilePaths;
       uni.uploadFile({
-        url: `${path.devServer}/api/image`,
+        url: `${path.devServer}/api/upload`,
         filePath: tempFilePaths[0],
         name: "file",
         success: (uploadFileRes) => {
-          getUserInfoAPI(uni.getStorageSync("token")).then((UserInfoRes) => {
-            UserInfoRes.data.userAvatar = `${path.devServer}/api/image/${JSON.parse(uploadFileRes.data).data}`;
-            putUserAPI(UserInfoRes.data).then(() => {
-              userInfo.value.userAvatar = UserInfoRes.data.userAvatar;
-              uni.showToast({
-                title: "头像修改成功",
-                icon: "success",
-              });
+          userInfo.value.userAvatar = JSON.parse(uploadFileRes.data).data;
+          putUserAPI(userInfo.value).then(() => {
+            uni.showToast({
+              title: "头像修改成功",
+              icon: "success",
             });
           });
+        },
+        fail: (fail) => {
+          console.log(fail);
         },
       });
     },

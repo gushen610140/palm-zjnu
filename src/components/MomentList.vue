@@ -8,11 +8,7 @@
   >
     <swiper indicator-dots autoplay circular class="banner">
       <swiper-item v-for="banner in bannerList" :key="banner.url">
-        <image
-          class="banner_img"
-          :src="`${path.devServer}/api/image/banners/${banner.url}`"
-          mode="scaleToFill"
-        />
+        <image class="banner_img" :src="banner.url" mode="scaleToFill" />
       </swiper-item>
     </swiper>
     <view class="moment" v-for="moment in momentList" :key="moment.id">

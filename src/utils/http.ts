@@ -1,5 +1,7 @@
+import { path } from "@/utils/path"
+
 // 请求基地址
-const baseURL = 'http://127.0.0.1:8080'
+const baseURL = path.devServer
 
 // 拦截器
 const httpInterceptor = {

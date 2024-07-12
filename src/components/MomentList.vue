@@ -220,8 +220,8 @@ const dialogInputConfirm = (value: string) => {
 
 <style scoped>
 .container {
-  width: 312px;
-  height: 610px;
+  width: 346px;
+  height: 80%;
 }
 .banner {
   margin: 0 auto;
@@ -241,7 +241,7 @@ scroll-view ::-webkit-scrollbar {
   height: 100%;
 }
 .moment {
-  width: 312px;
+  width: 346px;
   border-bottom: 1px solid #70707080;
 }
 .moment_container {
@@ -259,7 +259,8 @@ scroll-view ::-webkit-scrollbar {
 }
 .text {
   margin-left: 10px;
-  width: 260px;
+  width: 300px;
+  box-sizing: border-box;
 }
 .user_name {
   font-weight: bold;
@@ -269,13 +270,13 @@ scroll-view ::-webkit-scrollbar {
 }
 .image_container {
   display: grid;
-  grid-template-columns: repeat(3, 80px);
+  grid-template-columns: repeat(3, 95px);
   grid-gap: 5px;
   margin-top: 5px;
 }
 .img {
-  width: 80px;
-  height: 80px;
+  width: 95px;
+  height: 95px;
 }
 .bottom_area {
   display: flex;
@@ -305,7 +306,8 @@ scroll-view ::-webkit-scrollbar {
   margin-top: 10px;
   padding: 5px;
   background-color: #70707030;
-  width: 250px;
+  width: 300px;
+  box-sizing: border-box;
   border-radius: 5px;
 }
 .comment_item {
@@ -319,5 +321,3 @@ scroll-view ::-webkit-scrollbar {
   font-size: 15px;
 }
 </style>
-@/types/model/Moment@/types/model/Banner@/types/model/Comment
-@/types/model/Moment@/types/model/Banner@/types/model/Comment

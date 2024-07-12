@@ -56,6 +56,11 @@
 			"style": {
 				"navigationBarTitleText": "图片预览"
 			}
+		},{
+			"path": "pages/info/info",
+			"style": {
+				"navigationBarTitleText": "信息查询"
+			}
 		}
 	],
 	"globalStyle": {
@@ -75,6 +80,12 @@
 				"text": "首页",
 				"iconPath": "static/tabBar/index.png",
 				"selectedIconPath": "static/tabBar/index-selected.png"
+			},
+			{
+				"pagePath": "pages/info/info",
+				"text": "信息",
+				"iconPath": "static/tabBar/info.png",
+				"selectedIconPath": "static/tabBar/info-selected.png"
 			},
 			{
 				"pagePath": "pages/my/my",

@@ -55,6 +55,6 @@ const onPublish = () => {
 .moments {
   margin: 0 auto;
   margin-top: 10px;
-  width: 312px;
+  width: 346px;
 }
 </style>

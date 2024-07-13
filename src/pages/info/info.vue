@@ -9,23 +9,19 @@
     <image class="search" src="@/static/search_icon.png"></image>
   </view>
   <view class="titlebox">
-    <text class="title title1">最多跑一次？</text>
-    <text class="title title2">一次不用跑！</text>
+    <text class="title title1">各种校园服务分布杂乱？</text>
+    <text class="title title2">这里就是您的最佳导航助手</text>
+    <text class="title title3">点击复制链接到浏览器打开</text>
   </view>
   <view class="function_container">
-    <view class="function_box">
+    <view class="function_box" @click="inquire(links.inquireScore)">
       <view class="function_title"> 成绩查询 </view>
       <view class="function_intro"> 查看您的期末成绩 </view>
       <image src="@/static/enter_circle.png" mode="scaleToFill" class="enter" />
     </view>
-    <view class="function_box">
+    <view class="function_box" @click="inquire(links.inquireCourse)">
       <view class="function_title"> 课表查询 </view>
       <view class="function_intro"> 查询您的学年课表 </view>
-      <image src="@/static/enter_circle.png" mode="scaleToFill" class="enter" />
-    </view>
-    <view class="function_box">
-      <view class="function_title"> 寝室电费 </view>
-      <view class="function_intro"> 管理您的寝室电费 </view>
       <image src="@/static/enter_circle.png" mode="scaleToFill" class="enter" />
     </view>
   </view>
@@ -34,6 +30,19 @@
 <script setup lang="ts">
 import { ref } from "vue";
 const search_content = ref("");
+
+const links = ref({
+  inquireScore:
+    "https://jwxt.zjnu.edu.cn/jwglxt/cjcx/cjcx_cxDgXscj.html?gnmkdm=N305005&layout=default",
+  inquireCourse:
+    "https://jwxt.zjnu.edu.cn/jwglxt/kbcx/xskbcx_cxXskbcxIndex.html?gnmkdm=N2151&layout=default",
+});
+
+const inquire = (link: string) => {
+  uni.setClipboardData({
+    data: link,
+  });
+};
 </script>
 
 <style scoped>
@@ -78,10 +87,14 @@ const search_content = ref("");
     sans-serif;
 }
 .title1 {
-  color: #30303020;
+  color: #30303080;
 }
 .title2 {
   color: #608e63;
+  margin-top: 10px;
+}
+.title3 {
+  color: #30303080;
   margin-top: 10px;
 }
 .function_container {
